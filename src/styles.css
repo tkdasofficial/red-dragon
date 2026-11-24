@@ -158,7 +158,7 @@
 :root { --fire: oklch(0.62 0.2 35); --panel: oklch(0.28 0.03 35); --panel-edge: oklch(0.14 0.02 35); }
 @layer components {
   .pixel-btn { font-family: var(--font-pixel); font-size: 10px; padding: 12px 14px; background: var(--panel); color: var(--primary);
-    border: 3px solid var(--panel-edge); box-shadow: inset -3px -3px 0 var(--panel-edge), inset 3px 3px 0 oklch(1 0 0 / 0.12); image-rendering: pixelated; cursor: pointer; }
+    border: 3px solid var(--panel-edge); box-shadow: inset -3px -3px 0 var(--panel-edge), inset 3px 3px 0 oklch(1 0 0 / 0.12); image-rendering: pixelated; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
   .pixel-btn:active { transform: translateY(2px); }
   .pixel-btn[data-on="true"] { background: var(--primary); color: var(--primary-foreground); }
   .pixel-btn-fire { background: var(--fire); color: var(--primary-foreground); }

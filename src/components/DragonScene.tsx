@@ -78,8 +78,9 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
       s.angle += (WALK_SPEED / PATH_RADIUS) * dt * s.walkAmt;
       s.phase += STEP_RATE * dt * s.walkAmt;
     } else s.phase = Math.round(s.phase / Math.PI) * Math.PI; // plant
-    root.current.position.set(Math.cos(s.angle) * PATH_RADIUS, 0, Math.sin(s.angle) * PATH_RADIUS);
-    root.current.rotation.y = -s.angle + Math.PI; // face tangent (+z local)
+    // stays in place, facing right (side view for 2D use)
+    root.current.position.set(0, 0, 0);
+    root.current.rotation.y = Math.PI / 2;
     const sw = Math.sin(s.phase) * LEG_SWING * s.walkAmt;
     legL.current.rotation.x = sw;
     legR.current.rotation.x = -sw;
@@ -282,9 +283,9 @@ function Ground() {
 }
 
 export default function DragonScene() {
-  const ctrl = useRef<Ctrl>({ walking: true, mouth: false, attackUntil: 0 });
+  const ctrl = useRef<Ctrl>({ walking: false, mouth: false, attackUntil: 0 });
   const clock = useRef(0);
-  const [ui, setUi] = useState({ walking: true, mouth: false });
+  const [ui, setUi] = useState({ walking: false, mouth: false });
   const [ready, setReady] = useState(false);
 
   const toggleWalk = () => { ctrl.current.walking = !ctrl.current.walking; setUi((u) => ({ ...u, walking: ctrl.current.walking })); };
@@ -304,7 +305,7 @@ export default function DragonScene() {
 
   return (
     <div className="relative h-dvh w-full bg-background" data-scene-ready={ready ? "" : undefined}>
-      <Canvas shadows camera={{ position: [5, 3.5, 6], fov: 42 }} dpr={[1, 2]} onCreated={() => setTimeout(() => setReady(true), 300)}>
+      <Canvas shadows camera={{ position: [0.5, 1.6, typeof window !== "undefined" && window.innerWidth < 600 ? 10 : 6.5], fov: 40 }} dpr={[1, 2]} onCreated={() => setTimeout(() => setReady(true), 300)}>
         <Tick clock={clock} />
         <color attach="background" args={["#1c1210"]} />
         <fog attach="fog" args={["#1c1210", 9, 22]} />
@@ -324,10 +325,10 @@ export default function DragonScene() {
         <h1 className="font-pixel text-sm text-primary sm:text-lg">PYRO REX</h1>
         <p className="mt-2 font-pixel text-[9px] text-muted-foreground sm:text-[10px]">Drag to rotate · pinch/scroll to zoom</p>
       </div>
-      <div className="absolute inset-x-0 bottom-0 flex flex-wrap justify-center gap-2 p-4">
-        <button className="pixel-btn" data-on={ui.walking} onClick={toggleWalk}>{ui.walking ? "Stop" : "Walk"} <kbd>W</kbd></button>
-        <button className="pixel-btn" data-on={ui.mouth} onClick={toggleMouth}>{ui.mouth ? "Close" : "Open"} mouth <kbd>M</kbd></button>
-        <button className="pixel-btn pixel-btn-fire" onClick={attack}>Fire! <kbd>Space</kbd></button>
+      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-wrap justify-center gap-2 p-4">
+        <button type="button" className="pixel-btn" data-on={ui.walking} onClick={toggleWalk}>{ui.walking ? "Stop" : "Walk"} <kbd>W</kbd></button>
+        <button type="button" className="pixel-btn" data-on={ui.mouth} onClick={toggleMouth}>{ui.mouth ? "Close" : "Open"} mouth <kbd>M</kbd></button>
+        <button type="button" className="pixel-btn pixel-btn-fire" onClick={attack}>Fire! <kbd>Space</kbd></button>
       </div>
     </div>
   );
