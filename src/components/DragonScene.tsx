@@ -89,8 +89,8 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
     body.current.rotation.z = Math.sin(s.phase) * 0.05 * s.walkAmt;
     tail.current.forEach((g, i) => g && (g.rotation.y = Math.sin(s.t * 3 - i * 0.7) * (0.12 + 0.1 * s.walkAmt)));
     const flap = Math.sin(s.t * (attacking ? 9 : 2.5)) * (attacking ? 0.35 : 0.15);
-    if (wings.current[0]) wings.current[0].rotation.z = -flap;
-    if (wings.current[1]) wings.current[1].rotation.z = flap;
+    if (wings.current[0]) wings.current[0].rotation.z = -0.35 - flap;
+    if (wings.current[1]) wings.current[1].rotation.z = 0.35 + flap;
     // head + jaw
     const open = attacking || c.mouth;
     const jt = attacking ? JAW_OPEN * 1.3 : open ? JAW_OPEN : 0;
@@ -167,7 +167,7 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
             ))}
             {/* wings: stepped bone arm + pixel membrane */}
             {[-1, 1].map((sx) => (
-              <group key={sx} ref={(g) => { if (g) wings.current[sx < 0 ? 0 : 1] = g; }} position={[sx * 2.8, 10.6, -2]} rotation-y={sx * 0.55}>
+              <group key={sx} ref={(g) => { if (g) wings.current[sx < 0 ? 0 : 1] = g; }} position={[sx * 2.8, 10.6, -2]} rotation-y={sx * 1.25}>
                 <V p={[sx * 1.5, 0.8, 0]} s={[3, 0.8, 0.8]} c={C.redLo} />
                 <V p={[sx * 3.8, 2.2, -0.2]} s={[2.2, 0.8, 0.8]} c={C.redLo} />
                 <V p={[sx * 5.6, 3.4, -0.4]} s={[1.8, 0.7, 0.7]} c={C.redDk} />
