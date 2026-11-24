@@ -41,6 +41,7 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
   const jaw = useRef<THREE.Group>(null!);
   const mouthPt = useRef<THREE.Object3D>(null!);
   const tail = useRef<THREE.Group[]>([]);
+  const wings = useRef<THREE.Group[]>([]);
   const fire = useRef<THREE.InstancedMesh>(null!);
   const st = useRef({ angle: 0, phase: 0, walkAmt: 0, jaw: 0, t: 0, spawnAcc: 0 });
   const parts = useMemo(
@@ -87,6 +88,9 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
     body.current.position.y = Math.abs(Math.sin(s.phase)) * 0.35 * s.walkAmt + Math.sin(s.t * 2) * 0.08;
     body.current.rotation.z = Math.sin(s.phase) * 0.05 * s.walkAmt;
     tail.current.forEach((g, i) => g && (g.rotation.y = Math.sin(s.t * 3 - i * 0.7) * (0.12 + 0.1 * s.walkAmt)));
+    const flap = Math.sin(s.t * (attacking ? 9 : 2.5)) * (attacking ? 0.35 : 0.15);
+    if (wings.current[0]) wings.current[0].rotation.z = -flap;
+    if (wings.current[1]) wings.current[1].rotation.z = flap;
     // head + jaw
     const open = attacking || c.mouth;
     const jt = attacking ? JAW_OPEN * 1.3 : open ? JAW_OPEN : 0;
@@ -161,12 +165,21 @@ function Dragon({ ctrl }: { ctrl: React.MutableRefObject<Ctrl> }) {
                 <V p={[0, y! + h! * 0.75, z!]} s={[0.4, h! * 0.5, 0.4]} c={C.goldHi} />
               </group>
             ))}
-            {/* stub wings */}
+            {/* wings: stepped bone arm + pixel membrane */}
             {[-1, 1].map((sx) => (
-              <group key={sx} position={[sx * 3.6, 10, -1.5]}>
-                <V p={[sx * 0.8, 0.6, 0]} s={[1.6, 0.6, 1]} c={C.redLo} />
-                <V p={[sx * 1.8, 1.2, -0.3]} s={[1.2, 0.6, 1.8]} c={C.redDk} />
-                <V p={[sx * 1.2, 0, -0.6]} s={[1.6, 1.2, 0.3]} c={C.goldLo} />
+              <group key={sx} ref={(g) => { if (g) wings.current[sx < 0 ? 0 : 1] = g; }} position={[sx * 2.8, 10.6, -2]} rotation-y={sx * 0.55}>
+                <V p={[sx * 1.5, 0.8, 0]} s={[3, 0.8, 0.8]} c={C.redLo} />
+                <V p={[sx * 3.8, 2.2, -0.2]} s={[2.2, 0.8, 0.8]} c={C.redLo} />
+                <V p={[sx * 5.6, 3.4, -0.4]} s={[1.8, 0.7, 0.7]} c={C.redDk} />
+                <V p={[sx * 6.8, 4.2, -0.4]} s={[0.7, 1, 0.7]} c={C.gold} />
+                {[
+                  [1.5, -0.4, 2.6], [3, 0.2, 4], [4.4, 1, 4.4], [5.6, 1.6, 4.2], [6.6, 2.4, 3.2],
+                ].map(([x, y, h], i) => (
+                  <group key={i}>
+                    <V p={[sx * x!, y! - h! / 2 + 0.6, -0.5]} s={[1.3, h!, 0.3]} c={i % 2 ? C.goldLo : C.gold} />
+                    <V p={[sx * x!, y! - h! + 0.4, -0.5]} s={[0.5, 0.5, 0.35]} c={C.redDk} />
+                  </group>
+                ))}
               </group>
             ))}
             {arm(-3.6, armL)}
