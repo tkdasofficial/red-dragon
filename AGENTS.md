@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- The reusable dragon character lives in root `red-dragon/` (no scene/ground/lights); the demo page imports it. Why: user ships it to other games.
