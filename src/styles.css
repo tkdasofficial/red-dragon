@@ -30,6 +30,7 @@
  */
 
 @theme inline {
+  --font-pixel: "Press Start 2P", monospace;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -74,18 +75,18 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.2 0.02 35);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.82 0.15 80);
+  --primary-foreground: oklch(0.2 0.03 35);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted-foreground: oklch(0.75 0.04 60);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
@@ -152,4 +153,14 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+:root { --fire: oklch(0.62 0.2 35); --panel: oklch(0.28 0.03 35); --panel-edge: oklch(0.14 0.02 35); }
+@layer components {
+  .pixel-btn { font-family: var(--font-pixel); font-size: 10px; padding: 12px 14px; background: var(--panel); color: var(--primary);
+    border: 3px solid var(--panel-edge); box-shadow: inset -3px -3px 0 var(--panel-edge), inset 3px 3px 0 oklch(1 0 0 / 0.12); image-rendering: pixelated; cursor: pointer; }
+  .pixel-btn:active { transform: translateY(2px); }
+  .pixel-btn[data-on="true"] { background: var(--primary); color: var(--primary-foreground); }
+  .pixel-btn-fire { background: var(--fire); color: var(--primary-foreground); }
+  .pixel-btn kbd { opacity: .6; margin-left: 6px; font-size: 8px; }
 }
